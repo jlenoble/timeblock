@@ -1,0 +1,49 @@
+{
+  "name": "timeblock",
+  "description": "A helper class to build schedules",
+  "version": "0.0.0",
+  "keywords": [],
+  "author": {
+    "name": "Jason Lenoble",
+    "email": "jason.lenoble@gmail.com"
+  },
+  "contributors": [],
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.5.0"
+  },
+  "main": "lib/timeblock.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jlenoble/timeblock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jlenoble/timeblock/issues"
+  },
+  "homepage": "https://github.com/jlenoble/timeblock#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "autoreload-gulp": "*",
+    "babel-core": "^6.26.0",
+    "babel-plugin-add-module-exports": "*",
+    "babel-preset-env": "^1.6.1",
+    "chai": "*",
+    "del": "*",
+    "eslint-config-google": "*",
+    "gulp": "^4.0.0",
+    "gulp-babel": "*",
+    "gulp-eslint": "*",
+    "gulp-mocha": "*",
+    "gulp-rename": "*",
+    "gulp-replace": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-wrap": "*",
+    "markdown-include": "*",
+    "muter": "*",
+    "plumb-gulp": "*"
+  },
+  "peerDependencies": {}
+}
