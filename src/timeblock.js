@@ -60,6 +60,10 @@ export default class Timeblock extends Twix {
     }
   }
 
+  clone (tb) {
+    return new Timeblock(this);
+  }
+
   add (...args) {
     if (this._parent) {
       throw new Error(
