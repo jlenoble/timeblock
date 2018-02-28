@@ -98,4 +98,15 @@ export default class Timeblock extends Twix {
     this._end.add(...args);
     this._children.forEach(child => child._add(...args));
   }
+
+  _compact () {
+    let start = this._start;
+    this._children.forEach(child => {
+      const diff = child._start.diff(start);
+      if (diff !== 0) {
+        child._add(-diff);
+      }
+      start = child._end;
+    });
+  }
 }
