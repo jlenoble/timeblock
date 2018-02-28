@@ -1,16 +1,9 @@
 import {expect} from 'chai';
 import moment from 'moment';
-// import Twix from 'twix';
 import Timeblock from '../src/timeblock';
 
 describe('Testing Timeblock shifting', function () {
   const today = moment().startOf('d');
-
-  const hourSpans = [];
-  for (let i = 0; i < 24; ++i) {
-    hourSpans.push(moment.twix(today.clone().add(i, 'h'),
-      today.clone().add(i+1, 'h')));
-  }
 
   it('Mutable shifting - no children, no parent', function () {
     const tb = new Timeblock(today, today.clone().add(1, 'd'));
