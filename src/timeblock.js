@@ -54,6 +54,15 @@ export default class Timeblock extends Twix {
     });
   }
 
+  add (...args) {
+    if (this._parent) {
+      throw new Error(
+        'Timeblock has a parent and cannot be shifted independently');
+    }
+    this._add(...args);
+    return this;
+  }
+
   split (...args) {
     const twixes = super.split(...args);
     this._children = twixes;
@@ -64,5 +73,11 @@ export default class Timeblock extends Twix {
     const twixes = super.divide(n);
     this._children = twixes;
     return twixes;
+  }
+
+  _add (...args) {
+    this._start.add(...args);
+    this._end.add(...args);
+    this._children.forEach(child => child._add(...args));
   }
 }
