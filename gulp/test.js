@@ -3,10 +3,10 @@ import mocha from 'gulp-mocha';
 import './build';
 
 const testGlob = [
-  'build/test/**/*.test.js'
+  'build/test/**/*.test.js',
 ];
 
-export const test = () => {
+export function test () {
   return gulp.src(testGlob)
     .pipe(mocha());
 };
