@@ -21,7 +21,7 @@ export default class Timeblock extends Twix {
         get () {
           return _parent;
         },
-        set (tb) {
+        set (tb) { // can't change parentship through this accessor
           if (!_parent) {
             if (tb instanceof Timeblock) {
               _parent = tb;
@@ -31,6 +31,12 @@ export default class Timeblock extends Twix {
           } else {
             throw new Error('Parent of timeblock already set');
           }
+        },
+      },
+
+      _transferParentship: { // Use with caution, no check
+        value: tb => {
+          _parent = tb;
         },
       },
 
@@ -108,5 +114,13 @@ export default class Timeblock extends Twix {
       }
       start = child._end;
     });
+  }
+
+  _abandon (tb) {
+    const idx = this._children.indexOf(tb);
+    if (idx !== -1) {
+      const [child] = this._children.splice(idx, 1);
+      child._transferParentship(null);
+    }
   }
 }
