@@ -3,6 +3,7 @@ import Twix from 'twix';
 
 export default class Timeblock extends Twix {
   constructor (a, b) {
+    // Handle self assign, but children are assign further below
     if (a instanceof Twix) {
       super(a._start, a._end);
     } else if (moment.isDuration(a)) {
@@ -52,6 +53,11 @@ export default class Timeblock extends Twix {
         },
       },
     });
+
+    // Properties are defined, we can copy children when applicable
+    if (a instanceof Timeblock) {
+      this._children = a._children; // Use accessor smart handling
+    }
   }
 
   add (...args) {

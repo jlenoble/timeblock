@@ -15,16 +15,20 @@ describe('Testing Timeblock', function () {
       today.clone().add(i+1, 'h')));
   }
 
-  it('Initializing with various arguments', function () {
+  it('Initializing with various arguments (no children)', function () {
+    // Two Moments
     const tb1 = new Timeblock(today, today.clone().add(1, 'd'));
     expect(tb1.format()).to.equal(dayFormat);
 
+    // One Twix
     const tb2 = new Timeblock(todaySpan);
     expect(tb2.format()).to.equal(dayFormat);
 
+    // One bare Timeblock (no children)
     const tb3 = new Timeblock(tb1);
     expect(tb3.format()).to.equal(dayFormat);
 
+    // One Duration
     const tb4 = new Timeblock(moment.duration(1, 'd'));
     expect(tb4.format()).to.equal(moment.twix(tb4._start,
       tb4.start().add(1, 'd')).format());
@@ -72,5 +76,15 @@ describe('Testing Timeblock', function () {
       expect(child).to.be.instanceof(Timeblock);
       expect(child.format()).to.equal(blocks0[i].format());
     });
+  });
+
+  it('Initializing with a Timeblock with children', function () {
+    const parent = new Timeblock(todaySpan);
+    parent.divide(2);
+
+    const tb = new Timeblock(parent);
+    expect(tb.format()).to.equal(parent.format());
+    expect(tb._children[0].format()).to.equal(parent._children[0].format());
+    expect(tb._children[1].format()).to.equal(parent._children[1].format());
   });
 });
