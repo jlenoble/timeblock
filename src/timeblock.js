@@ -60,6 +60,14 @@ export default class Timeblock extends Twix {
     }
   }
 
+  current () {
+    const len = this._children.length;
+    if (!len) {
+      return this.start();
+    }
+    return this._children[len - 1].end();
+  }
+
   clone (tb) {
     return new Timeblock(this);
   }
