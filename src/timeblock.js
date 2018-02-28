@@ -87,6 +87,22 @@ export default class Timeblock extends Twix {
     return this;
   }
 
+  fill (tb) { // Expect any previous overflow already dealt with
+    this._adopt(tb);
+    const diff = this.current().diff(this._end);
+    if (diff > 0) {
+      if (tb._start.isSame(this._end)) {
+        this._abandon(tb);
+        return tb;
+      } else {
+        tb._end = this._end; // eslint-disable-line no-param-reassign
+        return new Timeblock(this._end, this._end.clone().add(diff));
+      }
+    } else {
+      return null;
+    }
+  }
+
   split (...args) {
     const twixes = super.split(...args);
     this._children = twixes; // set() accessor, this._children !== twixes
@@ -121,7 +137,7 @@ export default class Timeblock extends Twix {
     if (idx !== -1) {
       const [child] = this._children.splice(idx, 1);
       child._transferParentship(null);
-      this._compact();
+      this._compact(); // May fix overflow, or not!
     }
   }
 
