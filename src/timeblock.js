@@ -65,13 +65,13 @@ export default class Timeblock extends Twix {
 
   split (...args) {
     const twixes = super.split(...args);
-    this._children = twixes;
+    this._children = twixes; // set() accessor, this._children !== twixes
     return twixes;
   }
 
   divide (n) {
     const twixes = super.divide(n);
-    this._children = twixes;
+    this._children = twixes; // set() accessor, this._children !== twixes
     return twixes;
   }
 
