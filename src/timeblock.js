@@ -110,7 +110,7 @@ export default class Timeblock extends Twix {
     this._children.forEach(child => {
       const diff = child._start.diff(start);
       if (diff !== 0) {
-        child._add(-diff);
+        child._add(-diff); // may overflow
       }
       start = child._end;
     });
@@ -123,5 +123,14 @@ export default class Timeblock extends Twix {
       child._transferParentship(null);
       this._compact();
     }
+  }
+
+  _adopt (tb) {
+    if (tb._parent) { // If is this, then _adopt will reorder child to the end
+      tb._parent._abandon(tb);
+    }
+    this._children.push(tb);
+    tb._transferParentship(this);
+    this._compact(); // may overflow
   }
 }
