@@ -70,15 +70,6 @@ describe('Testing Timeblock filling', function () {
     expect(tb._children[0].format()).to.equal(moment.twix(
       today, today.clone().add(6, 'h')).format());
     expect(tb._children[1].format()).to.equal(moment.twix(
-      today.clone().add(12, 'h'), today.clone().add(18, 'h')).format());
-    expect(tb._children[2].format()).to.equal(moment.twix(
-      today.clone().add(18, 'h'), today.clone().add(24, 'h')).format());
-    expect(tb._children[3]).to.be.undefined;
-
-    tb._compact();
-    expect(tb._children[0].format()).to.equal(moment.twix(
-      today, today.clone().add(6, 'h')).format());
-    expect(tb._children[1].format()).to.equal(moment.twix(
       today.clone().add(6, 'h'), today.clone().add(12, 'h')).format());
     expect(tb._children[2].format()).to.equal(moment.twix(
       today.clone().add(12, 'h'), today.clone().add(18, 'h')).format());

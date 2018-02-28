@@ -121,6 +121,7 @@ export default class Timeblock extends Twix {
     if (idx !== -1) {
       const [child] = this._children.splice(idx, 1);
       child._transferParentship(null);
+      this._compact();
     }
   }
 }
