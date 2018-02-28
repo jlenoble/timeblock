@@ -1,9 +1,13 @@
+import moment from 'moment';
 import Twix from 'twix';
 
 export default class Timeblock extends Twix {
   constructor (a, b) {
     if (a instanceof Twix) {
       super(a._start, a._end);
+    } else if (moment.isDuration(a)) {
+      const mt = moment();
+      super(mt, mt.clone().add(a));
     } else {
       super(a, b);
     }

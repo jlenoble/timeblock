@@ -15,7 +15,7 @@ describe('Testing Timeblock', function () {
       today.clone().add(i+1, 'h')));
   }
 
-  it(`format() yields ${dayFormat}`, function () {
+  it('Initializing with various arguments', function () {
     const tb1 = new Timeblock(today, today.clone().add(1, 'd'));
     expect(tb1.format()).to.equal(dayFormat);
 
@@ -24,6 +24,10 @@ describe('Testing Timeblock', function () {
 
     const tb3 = new Timeblock(tb1);
     expect(tb3.format()).to.equal(dayFormat);
+
+    const tb4 = new Timeblock(moment.duration(1, 'd'));
+    expect(tb4.format()).to.equal(moment.twix(tb4._start,
+      tb4.start().add(1, 'd')).format());
   });
 
   it('A Timeblock can be subdivided in equal parts', function () {
