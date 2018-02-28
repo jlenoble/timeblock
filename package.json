@@ -24,7 +24,11 @@
     "url": "https://github.com/jlenoble/timeblock/issues"
   },
   "homepage": "https://github.com/jlenoble/timeblock#readme",
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14",
+    "twix": "^1.2.1"
+  },
   "devDependencies": {
     "autoreload-gulp": "*",
     "babel-core": "^6.26.0",
@@ -43,7 +47,8 @@
     "gulp-wrap": "*",
     "markdown-include": "*",
     "muter": "*",
-    "plumb-gulp": "*"
+    "plumb-gulp": "*",
+    "proxy-helpers": "^0.1.0"
   },
   "peerDependencies": {}
 }
