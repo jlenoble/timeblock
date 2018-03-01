@@ -17,12 +17,17 @@ const makeIterable = tag => {
     }
 
     next () {
-      return new Iterable(this.start().add(1, tag));
+      return new this.constructor(this.start().add(1, tag));
     }
   }
 
-  Object.defineProperty(Iterable, 'name', {
-    value: names[tag],
+  Object.defineProperties(Iterable, {
+    name: {
+      value: names[tag],
+    },
+    tag: {
+      value: tag,
+    },
   });
 
   return Iterable;
