@@ -116,6 +116,15 @@ export default class Timeblock extends Twix {
     return twixes;
   }
 
+  isBefore (tb) {
+    return this._end <= tb._start;
+  }
+
+  isAfter (tb) {
+    return this._end >= tb._start;
+  }
+
+
   _add (...args) {
     this._oStart.add(...args);
     this._oEnd.add(...args);
