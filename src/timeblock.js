@@ -95,7 +95,8 @@ export default class Timeblock extends Twix {
         this._abandon(tb);
         return tb;
       } else {
-        tb._end = this._end; // eslint-disable-line no-param-reassign
+        tb._oEnd = this._oEnd.clone(); // eslint-disable-line no-param-reassign
+        tb._mutated();
         return new Timeblock(this._end, this._end.clone().add(diff));
       }
     } else {
