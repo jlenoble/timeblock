@@ -116,8 +116,9 @@ export default class Timeblock extends Twix {
   }
 
   _add (...args) {
-    this._start.add(...args);
-    this._end.add(...args);
+    this._oStart.add(...args);
+    this._oEnd.add(...args);
+    this._mutated();
     this._children.forEach(child => child._add(...args));
   }
 
