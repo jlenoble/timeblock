@@ -5,7 +5,7 @@ export default class Timeblock extends Twix {
   constructor (a, b) {
     // Handle self assign, but children are assign further below
     if (a instanceof Twix) {
-      super(a._start, a._end);
+      super(a._oStart, a._oEnd, a.allday);
     } else if (moment.isDuration(a)) {
       const mt = moment();
       super(mt, mt.clone().add(a));
