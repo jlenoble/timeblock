@@ -116,6 +116,16 @@ export default class Timeblock extends Twix {
     return twixes;
   }
 
+  wrap (tb) {
+    if (this.overlaps(tb)) {
+      if (this.engulfs(tb)) {
+        return this._wrapEngulfed(tb);
+      }
+    }
+
+    return [];
+  }
+
   isBefore (tb) {
     return this._end <= tb._start;
   }
@@ -123,7 +133,6 @@ export default class Timeblock extends Twix {
   isAfter (tb) {
     return this._end >= tb._start;
   }
-
 
   _add (...args) {
     this._oStart.add(...args);
@@ -159,5 +168,57 @@ export default class Timeblock extends Twix {
     this._children.push(tb);
     tb._transferParentship(this);
     this._compact(); // may overflow
+  }
+
+  _wrapEngulfed (tb) {
+    if (!this._children.length) {
+      if (this._start < tb._start) {
+        this._adopt(new Timeblock(this._start, tb._start));
+      }
+      this._adopt(tb);
+      return [];
+    }
+
+    let child0;
+    let grandchild0;
+
+    for (let child of this._children) {
+      if (child.isBefore(tb)) {
+        continue;
+      }
+
+      child0 = child;
+      child.split(tb._start);
+      grandchild0 = child._children[0];
+
+      this._adopt(grandchild0);
+      this._adopt(tb);
+      this._adopt(child._children[0]); // 0, not 1: Was spliced
+
+      break;
+    }
+
+    while (this._children[0] !== grandchild0) {
+      this._adopt(this._children[0]); // Restack to the end
+    }
+
+    this._abandon(child0);
+
+    return this._sliceTail();
+  }
+
+  _sliceTail () {
+    const drop = this._children.filter(c => !this.engulfs(c));
+    const last = drop[0];
+
+    drop.forEach(c => this._abandon(c));
+
+    if (last._end > this._end) {
+      last.split(this._end);
+      this._adopt(last._children[0]);
+      drop[0] = last._children[0]; // 0, not 1: Was spliced
+    }
+
+    return drop;
   }
 }
