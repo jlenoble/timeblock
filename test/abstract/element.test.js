@@ -28,13 +28,11 @@ describe('An Element, initialized with {adapt: moment}', function () {
 
     const now = moment();
 
-    const g = new Element(now.format(), now.clone().add(1, 'h').format(),
-      {adapt: moment}); // Conversion on input
+    const g = new Element(now.format(), now.clone().add(1, 'h').format());
     expect(g.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(g._start).not.to.equal(now);
 
-    const h = new Element(now, now.clone().add(1, 'h'),
-      {adapt: moment}); // Conversion on input
+    const h = new Element(now, now.clone().add(1, 'h'));
     expect(h.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(h._start).not.to.equal(now);
   });
@@ -51,13 +49,11 @@ describe('An Element, initialized with {clone: moment}', function () {
 
     const now = moment();
 
-    const i = new Element(now.format(), now.clone().add(1, 'h').format(),
-      {clone: moment}); // Conversion on output
+    const i = new Element(now.format(), now.clone().add(1, 'h').format());
     expect(i.size()).to.be.NaN;
     expect(i._start).not.to.equal(now);
 
-    const j = new Element(now, now.clone().add(1, 'h'),
-      {clone: moment}); // Conversion on output
+    const j = new Element(now, now.clone().add(1, 'h'));
     expect(j.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(j._start).not.to.equal(now);
   });
