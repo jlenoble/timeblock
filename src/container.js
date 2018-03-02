@@ -10,7 +10,7 @@ export default class Container {
       _start: {
         get () {
           const e = this[elements][0];
-          return e ? e._start : 0;
+          return e !== undefined ? e._start : 0;
         },
       },
 
@@ -18,7 +18,7 @@ export default class Container {
         get () {
           const elts = this[elements];
           const e = elts[elts.length - 1];
-          return e ? e._end : 0;
+          return e !== undefined ? e._end : 0;
         },
       },
     });
