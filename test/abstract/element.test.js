@@ -62,9 +62,14 @@ funcs.forEach(adapt => {
     if (clone !== undefined || adapt !== undefined) {
       describe(`Element initialized with ${adapt && 'adapt'}/${
         clone && 'clone'}`, function () {
-        const Element = makeElement({adapt, clone, shift: (mt, diff) => {
-          mt.add(diff);
-        }});
+        const Element = makeElement({adapt, clone,
+          shift: (mt, diff) => {
+            mt.add(diff);
+          },
+          diff: (mt1, mt2) => {
+            return mt2.diff(mt1);
+          },
+        });
 
         it('has a method clone', function () {
           const today = moment().startOf('d');
@@ -86,6 +91,19 @@ funcs.forEach(adapt => {
 
           const d = c.clone();
           d.shift(moment.duration(1, 'd'));
+
+          expect(d._start).not.to.equal(c._end);
+          expect(d._start).to.eql(tomorrow);
+          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+        });
+
+        it('has a method shiftTo', function () {
+          const today = moment().startOf('d');
+          const tomorrow = today.clone().add(1, 'd');
+          const c = new Element(today, tomorrow);
+
+          const d = c.clone();
+          d.shiftTo(tomorrow);
 
           expect(d._start).not.to.equal(c._end);
           expect(d._start).to.eql(tomorrow);

@@ -2,7 +2,7 @@ export const elements = Symbol('elements');
 export const start = Symbol('start');
 export const end = Symbol('end');
 
-export const makeElement = ({adapt, clone, shift} = {}) => {
+export const makeElement = ({adapt, clone, shift, diff} = {}) => {
   const defineProperties1 = adapt
     ? (a, b) => ({
       [start]: {value: adapt(a)},
@@ -61,9 +61,20 @@ export const makeElement = ({adapt, clone, shift} = {}) => {
       },
     });
 
+  const defineProperties5 = diff
+    ? (a, b) => ({})
+    : (a, b) => ({
+      shiftTo: {
+        value: function () {
+          throw new TypeError(
+            `This Element object can't be shifted (no diff)`);
+        },
+      },
+    });
+
   const defineProperties = (a, b) => {
     return [defineProperties1, defineProperties2, defineProperties3,
-      defineProperties4].reduce((props, fn) => {
+      defineProperties4, defineProperties5].reduce((props, fn) => {
       return Object.assign(props, fn(a, b));
     }, {});
   };
@@ -84,6 +95,10 @@ export const makeElement = ({adapt, clone, shift} = {}) => {
     shift (diff) {
       shift(this[start], diff);
       shift(this[end], diff);
+    }
+
+    shiftTo (value) {
+      this.shift(diff(this[start], value));
     }
   };
 };
