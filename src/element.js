@@ -2,8 +2,8 @@ export const elements = Symbol('elements');
 export const start = Symbol('start');
 export const end = Symbol('end');
 
-export const makeElement = ({adapt, clone} = {}) => {
-  const initProperties = adapt
+export const makeElement = ({adapt, clone, shift} = {}) => {
+  const defineProperties1 = adapt
     ? (a, b) => ({
       [start]: {value: adapt(a)},
       [end]: {value: adapt(b)},
@@ -13,51 +13,60 @@ export const makeElement = ({adapt, clone} = {}) => {
       [end]: {value: b},
     });
 
-  const _defineProperties = clone
-    ? (a, b) => {
-      const properties = initProperties(a, b);
-      return Object.assign(properties, {
-        _start: {
-          get () {
-            return clone(this[start]);
-          },
+  const defineProperties2 = clone
+    ? (a, b) => ({
+      _start: {
+        get () {
+          return clone(this[start]);
         },
-        _end: {
-          get () {
-            return clone(this[end]);
-          },
+      },
+      _end: {
+        get () {
+          return clone(this[end]);
         },
-      });
-    }
-    : (a, b) => {
-      const properties = initProperties(a, b);
-      return Object.assign(properties, {
-        _start: {
-          get () {
-            return this[start];
-          },
+      },
+    })
+    : (a, b) => ({
+      _start: {
+        get () {
+          return this[start];
         },
-        _end: {
-          get () {
-            return this[end];
-          },
+      },
+      _end: {
+        get () {
+          return this[end];
         },
-      });
-    };
+      },
+    });
 
-  const defineProperties = clone || adapt
-    ? _defineProperties
-    : (a, b) => {
-      const properties = _defineProperties(a, b);
-      return Object.assign(properties, {
-        clone: {
-          value: function () {
-            throw new TypeError(
-              `This Element object can't be cloned safely (no init adaptors)`);
-          },
+  const defineProperties3 = clone || adapt
+    ? (a, b) => ({})
+    : (a, b) => ({
+      clone: {
+        value: function () {
+          throw new TypeError(
+            `This Element object can't be cloned safely (no clone/adapt)`);
         },
-      });
-    };
+      },
+    });
+
+  const defineProperties4 = shift
+    ? (a, b) => ({})
+    : (a, b) => ({
+      shift: {
+        value: function () {
+          throw new TypeError(
+            `This Element object can't be shifted (no shift)`);
+        },
+      },
+    });
+
+  const defineProperties = (a, b) => {
+    return [defineProperties1, defineProperties2, defineProperties3,
+      defineProperties4].reduce((props, fn) => {
+      return Object.assign(props, fn(a, b));
+    }, {});
+  };
 
   return class Element {
     constructor (a, b) {
@@ -70,6 +79,11 @@ export const makeElement = ({adapt, clone} = {}) => {
 
     clone () {
       return new Element(this._start, this._end);
+    }
+
+    shift (diff) {
+      shift(this[start], diff);
+      shift(this[end], diff);
     }
   };
 };
