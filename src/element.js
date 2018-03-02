@@ -1,18 +1,22 @@
+export const elements = Symbol('elements');
 const start = Symbol('start');
 const end = Symbol('end');
 
-export class Element {
-  constructor (a, b, {adapt, clone} = {}) {
-    const properties = adapt ? {
+export const makeElement = ({adapt, clone} = {}) => {
+  const initProperties = adapt
+    ? (a, b) => ({
       [start]: {value: adapt(a)},
       [end]: {value: adapt(b)},
-    } : {
+    })
+    : (a, b) => ({
       [start]: {value: a},
       [end]: {value: b},
-    };
+    });
 
-    if (clone) {
-      Object.assign(properties, {
+  const defineProperties = clone
+    ? (a, b) => {
+      const properties = initProperties(a, b);
+      return Object.assign(properties, {
         _start: {
           get () {
             return clone(this[start]);
@@ -24,8 +28,10 @@ export class Element {
           },
         },
       });
-    } else {
-      Object.assign(properties, {
+    }
+    : (a, b) => {
+      const properties = initProperties(a, b);
+      return Object.assign(properties, {
         _start: {
           get () {
             return this[start];
@@ -37,12 +43,15 @@ export class Element {
           },
         },
       });
+    };
+
+  return class Element {
+    constructor (a, b) {
+      Object.defineProperties(this, defineProperties(a, b));
     }
 
-    Object.defineProperties(this, properties);
-  }
-
-  size () {
-    return +this[end] - this[start];
-  }
-}
+    size () {
+      return +this[end] - this[start];
+    }
+  };
+};

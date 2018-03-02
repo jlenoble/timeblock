@@ -1,4 +1,4 @@
-const elements = Symbol();
+import {elements} from './element';
 
 export default class Container {
   constructor () {

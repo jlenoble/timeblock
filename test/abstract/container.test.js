@@ -1,7 +1,9 @@
 /* eslint-disable max-len */
 import {expect} from 'chai';
 import Container from '../../src/container';
-import {Element} from '../../src/element';
+import {makeElement} from '../../src/element';
+
+const Element = makeElement();
 
 describe('A Container', function () {
   it('starts empty - isEmpty method', function () {
