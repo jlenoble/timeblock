@@ -63,6 +63,8 @@ export default class Timeblock extends Twix {
     // Properties are defined, we can copy children when applicable
     if (a instanceof Timeblock) {
       this._children = a._children; // Use accessor smart handling
+      this._category = a._category;
+      this._tag = a._tag;
     }
   }
 
@@ -113,6 +115,12 @@ export default class Timeblock extends Twix {
   }
 
   insert (tb) {
+    if (tb._children.length) {
+      tb._children
+        .map(child => child) // Make sure to work on an immutable array
+        .forEach(child => this.insert(child)); // insert has side-effects
+    }
+
     if (tb._tag) {
       const wtb = this._children.find(child => {
         return child._category === tb._tag && !child.isFull();
@@ -193,6 +201,9 @@ export default class Timeblock extends Twix {
     }
     this._children.push(tb);
     tb._transferParentship(this);
+    if (this._tag) {
+      tb._tag = this._tag; // eslint-disable-line no-param-reassign
+    }
     this._compact(); // may overflow
   }
 
