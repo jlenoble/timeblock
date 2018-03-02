@@ -15,8 +15,6 @@ describe('An Element, initialized with no adaptors', function () {
     expect(f.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(f._start).to.equal(now);
   });
-
-  it('may have a value - pinning');
 });
 
 describe('An Element, initialized with {adapt: moment}', function () {
@@ -36,8 +34,6 @@ describe('An Element, initialized with {adapt: moment}', function () {
     expect(h.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(h._start).not.to.equal(now);
   });
-
-  it('may have a value - pinning');
 });
 
 describe('An Element, initialized with {clone: moment}', function () {
@@ -57,6 +53,30 @@ describe('An Element, initialized with {clone: moment}', function () {
     expect(j.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(j._start).not.to.equal(now);
   });
+});
 
-  it('may have a value - pinning');
+const funcs = [undefined, moment];
+
+funcs.forEach(adapt => {
+  funcs.forEach(clone => {
+    describe(`Element initialized with ${adapt && 'adapt'}/${
+      clone && 'clone'}`, function () {
+      const Element = makeElement({adapt, clone});
+
+      if (clone !== undefined || adapt !== undefined) {
+        it('has a method clone', function () {
+          const today = moment().startOf('d');
+          const tomorrow = today.clone().add(1, 'd');
+          const c = new Element(today, tomorrow);
+
+          const d = c.clone();
+
+          expect(d._start).not.to.equal(c._start);
+          expect(d._end).not.to.equal(c._end);
+          expect(d._start).to.eql(c._start);
+          expect(d._end).to.eql(c._end);
+        });
+      }
+    });
+  });
 });

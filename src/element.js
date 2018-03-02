@@ -13,7 +13,7 @@ export const makeElement = ({adapt, clone} = {}) => {
       [end]: {value: b},
     });
 
-  const defineProperties = clone
+  const _defineProperties = clone
     ? (a, b) => {
       const properties = initProperties(a, b);
       return Object.assign(properties, {
@@ -45,6 +45,20 @@ export const makeElement = ({adapt, clone} = {}) => {
       });
     };
 
+  const defineProperties = clone || adapt
+    ? _defineProperties
+    : (a, b) => {
+      const properties = _defineProperties(a, b);
+      return Object.assign(properties, {
+        clone: {
+          value: function () {
+            throw new TypeError(
+              `This Element object can't be cloned safely (no init adaptors)`);
+          },
+        },
+      });
+    };
+
   return class Element {
     constructor (a, b) {
       Object.defineProperties(this, defineProperties(a, b));
@@ -52,6 +66,10 @@ export const makeElement = ({adapt, clone} = {}) => {
 
     size () {
       return +this[end] - this[start];
+    }
+
+    clone () {
+      return new Element(this._start, this._end);
     }
   };
 };
