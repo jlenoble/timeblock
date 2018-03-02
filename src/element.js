@@ -95,10 +95,19 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     shift (diff) {
       shift(this[start], diff);
       shift(this[end], diff);
+      return this;
     }
 
     shiftTo (value) {
-      this.shift(diff(this[start], value));
+      return this.shift(diff(this[start], value));
+    }
+
+    cloneAndShift (diff) {
+      return this.clone().shift(diff);
+    }
+
+    cloneAndShiftTo (value) {
+      return this.clone().shiftTo(value);
     }
   };
 };

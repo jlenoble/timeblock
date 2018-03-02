@@ -92,6 +92,8 @@ funcs.forEach(adapt => {
           const d = c.clone();
           d.shift(moment.duration(1, 'd'));
 
+          expect(c._start).to.eql(today);
+          expect(c._end).to.eql(tomorrow);
           expect(d._start).not.to.equal(c._end);
           expect(d._start).to.eql(tomorrow);
           expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
@@ -105,6 +107,36 @@ funcs.forEach(adapt => {
           const d = c.clone();
           d.shiftTo(tomorrow);
 
+          expect(c._start).to.eql(today);
+          expect(c._end).to.eql(tomorrow);
+          expect(d._start).not.to.equal(c._end);
+          expect(d._start).to.eql(tomorrow);
+          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+        });
+
+        it('has a method cloneAndShift', function () {
+          const today = moment().startOf('d');
+          const tomorrow = today.clone().add(1, 'd');
+          const c = new Element(today, tomorrow);
+
+          const d = c.cloneAndShift(moment.duration(1, 'd'));
+
+          expect(c._start).to.eql(today);
+          expect(c._end).to.eql(tomorrow);
+          expect(d._start).not.to.equal(c._end);
+          expect(d._start).to.eql(tomorrow);
+          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+        });
+
+        it('has a method cloneAndShiftTo', function () {
+          const today = moment().startOf('d');
+          const tomorrow = today.clone().add(1, 'd');
+          const c = new Element(today, tomorrow);
+
+          const d = c.cloneAndShiftTo(tomorrow);
+
+          expect(c._start).to.eql(today);
+          expect(c._end).to.eql(tomorrow);
           expect(d._start).not.to.equal(c._end);
           expect(d._start).to.eql(tomorrow);
           expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
