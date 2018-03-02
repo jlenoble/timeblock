@@ -20,8 +20,19 @@ describe('A Container', function () {
     it('It may wrap around sized Elements - autoresize');
   });
 
-  it('has an occupationSize method');
-  it('has a freeSize method');
+  it('has an occupationSize method', function () {
+    const c = new Container();
+    const e = new Element(2, 7);
+    c.add(e);
+    expect(c.occupationSize()).to.equal(5);
+  });
+
+  it('has a freeSize method', function () {
+    const c = new Container();
+    const e = new Element(2, 7);
+    c.add(e);
+    expect(c.freeSize()).to.equal(0);
+  });
 
   it('has an add method', function () {
     const c = new Container();
