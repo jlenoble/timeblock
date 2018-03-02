@@ -8,7 +8,10 @@ describe('A Container', function () {
     expect(new Container().isEmpty()).to.be.true;
   });
 
-  it('has a size - size method');
+  it('has a size - size method', function () {
+    expect(new Container().size()).to.equal(0);
+  });
+
   it('has bounds - start and end methods');
 
   describe('is resizable:', function () {
@@ -20,7 +23,17 @@ describe('A Container', function () {
   it('has an occupationSize method');
   it('has a freeSize method');
 
-  it('has an add method');
+  it('has an add method', function () {
+    const c = new Container();
+    const e = new Element(2, 7);
+
+    expect(c.isEmpty()).to.be.true;
+    c.add(e);
+    expect(c.isEmpty()).to.be.false;
+
+    expect(c.size()).to.equal(5);
+  });
+
   it('has a remove method');
   it('has a has method');
 

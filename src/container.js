@@ -12,6 +12,14 @@ export default class Container {
   isEmpty () {
     return !this[elements].length;
   }
+
+  size () {
+    return this[elements].reduce((s, e) => s + e.size(), 0);
+  }
+
+  add (e) {
+    this[elements].push(e);
+  }
 }
 
 export class Element {
