@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import {expect} from 'chai';
-import Container from '../../src/container';
+import moment from 'moment';
+import Container, {Element} from '../../src/container';
 
 describe('A Container', function () {
   it('starts empty - isEmpty method', function () {
@@ -60,6 +61,36 @@ describe('A Wrapper', function () {
 });
 
 describe('An Element', function () {
-  it('has a size');
+  it('has a size: size method', function () {
+    const e = new Element(10, 100);
+    expect(e.size()).to.equal(90);
+
+    const now = moment();
+
+    const f = new Element(now, now.clone().add(1, 'h'));
+    expect(f.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
+    expect(f._start).to.equal(now);
+
+    const g = new Element(now.format(), now.clone().add(1, 'h').format(),
+      {adapt: moment}); // Conversion on input
+    expect(g.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
+    expect(g._start).not.to.equal(now);
+
+    const h = new Element(now, now.clone().add(1, 'h'),
+      {adapt: moment}); // Conversion on input
+    expect(h.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
+    expect(h._start).not.to.equal(now);
+
+    const i = new Element(now.format(), now.clone().add(1, 'h').format(),
+      {clone: moment}); // Conversion on output
+    expect(i.size()).to.be.NaN;
+    expect(i._start).not.to.equal(now);
+
+    const j = new Element(now, now.clone().add(1, 'h'),
+      {clone: moment}); // Conversion on output
+    expect(j.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
+    expect(j._start).not.to.equal(now);
+  });
+
   it('may have a value - pinning');
 });
