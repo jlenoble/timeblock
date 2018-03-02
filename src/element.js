@@ -1,6 +1,6 @@
 export const elements = Symbol('elements');
-const start = Symbol('start');
-const end = Symbol('end');
+export const start = Symbol('start');
+export const end = Symbol('end');
 
 export const makeElement = ({adapt, clone} = {}) => {
   const initProperties = adapt
