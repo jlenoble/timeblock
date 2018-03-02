@@ -66,6 +66,14 @@ export default class Timeblock extends Twix {
     }
   }
 
+  categorize (name) {
+    this._category = name;
+  }
+
+  tag (name) {
+    this._tag = name;
+  }
+
   current () {
     const len = this._children.length;
     if (!len) {
@@ -104,6 +112,20 @@ export default class Timeblock extends Twix {
     }
   }
 
+  insert (tb) {
+    if (tb._tag) {
+      const wtb = this._children.find(child => {
+        return child._category === tb._tag && !child.isFull();
+      });
+
+      if (wtb) {
+        wtb.fill(tb);
+      }
+    } else {
+      return this.fill(tb);
+    }
+  }
+
   split (...args) {
     const twixes = super.split(...args);
     this._children = twixes; // set() accessor, this._children !== twixes
@@ -132,6 +154,10 @@ export default class Timeblock extends Twix {
 
   isAfter (tb) {
     return this._end >= tb._start;
+  }
+
+  isFull () {
+    return this.current() >= this._end;
   }
 
   _add (...args) {
