@@ -70,12 +70,10 @@ export const makeCompactElement = Element => {
     * [Symbol.iterator] () {
       let a;
       for (let b of this._elements) {
-        if (!a) {
-          a = b;
-          continue;
+        if (a) {
+          yield new Element(a, b);
         }
-
-        yield new Element(a, b);
+        a = b;
       }
     }
 
