@@ -98,10 +98,35 @@ describe('A Container', function () {
     });
   });
 
-  it('has resizable unpinned filler Elements');
-
   describe('when compacting Elements', function () {
-    it('leaves pinned Elements untouched');
+    it('leaves pinned Elements untouched', function () {
+      const c = new Container();
+      const e = new Element(2, 7);
+
+      const es = [
+        e,
+        e.cloneAndShift(10),
+        e.cloneAndShift(20).pin(),
+        e.cloneAndShift(30),
+      ];
+
+      es.forEach(e => {
+        c.add(e);
+      });
+
+      const es2 = Array.from(c);
+
+      expect(es2[0]._start.format()).to.eql(moment(2).format());
+      expect(es2[1]._start.format()).to.eql(moment(7).format());
+      expect(es2[2]._start.format()).to.eql(moment(22).format());
+      expect(es2[3]._start.format()).to.eql(moment(12).format());
+
+      expect(es2[0]._end.format()).to.eql(moment(7).format());
+      expect(es2[1]._end.format()).to.eql(moment(12).format());
+      expect(es2[2]._end.format()).to.eql(moment(27).format());
+      expect(es2[3]._end.format()).to.eql(moment(17).format());
+    });
+
     it('shrinks filler Elements to fit new Elements if possible');
 
     describe('and when a filler Element is not large enough', function () {
