@@ -15,7 +15,7 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     });
 
   const defineProperties2 = clone
-    ? (a, b) => ({
+    ? () => ({
       _start: {
         get () {
           return clone(this[start]);
@@ -27,7 +27,7 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
         },
       },
     })
-    : (a, b) => ({
+    : () => ({
       _start: {
         get () {
           return this[start];
@@ -41,8 +41,8 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     });
 
   const defineProperties3 = clone || adapt
-    ? (a, b) => ({})
-    : (a, b) => ({
+    ? () => ({})
+    : () => ({
       clone: {
         value: function () {
           throw new TypeError(
@@ -52,8 +52,8 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     });
 
   const defineProperties4 = shift
-    ? (a, b) => ({})
-    : (a, b) => ({
+    ? () => ({})
+    : () => ({
       shift: {
         value: function () {
           throw new TypeError(
@@ -63,8 +63,8 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     });
 
   const defineProperties5 = diff
-    ? (a, b) => ({})
-    : (a, b) => ({
+    ? () => ({})
+    : () => ({
       shiftTo: {
         value: function () {
           throw new TypeError(
@@ -74,15 +74,20 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     });
 
   const defineProperties = (a, b) => {
-    return [defineProperties1, defineProperties2, defineProperties3,
-      defineProperties4, defineProperties5].reduce((props, fn) => {
+    return [defineProperties2, defineProperties3, defineProperties4,
+      defineProperties5].reduce((props, fn) => {
       return Object.assign(props, fn(a, b));
     }, {});
   };
 
   class Element {
-    constructor (a, b) {
+    constructor (a, b, ...args) {
       Object.defineProperties(this, defineProperties(a, b));
+      this.initialize(a, b, ...args);
+    }
+
+    initialize (a, b) {
+      Object.defineProperties(this, defineProperties1(a, b));
     }
 
     size () {
