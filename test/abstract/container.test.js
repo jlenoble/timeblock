@@ -118,13 +118,13 @@ describe('A Container', function () {
 
       expect(es2[0]._start.format()).to.eql(moment(2).format());
       expect(es2[1]._start.format()).to.eql(moment(7).format());
-      expect(es2[2]._start.format()).to.eql(moment(22).format());
-      expect(es2[3]._start.format()).to.eql(moment(12).format());
+      expect(es2[2]._start.format()).to.eql(moment(12).format());
+      expect(es2[3]._start.format()).to.eql(moment(22).format());
 
       expect(es2[0]._end.format()).to.eql(moment(7).format());
       expect(es2[1]._end.format()).to.eql(moment(12).format());
-      expect(es2[2]._end.format()).to.eql(moment(27).format());
-      expect(es2[3]._end.format()).to.eql(moment(17).format());
+      expect(es2[2]._end.format()).to.eql(moment(17).format());
+      expect(es2[3]._end.format()).to.eql(moment(27).format());
     });
 
     it('shrinks filler Elements to fit new Elements if possible');

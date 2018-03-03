@@ -1,7 +1,9 @@
 import {elements, makeElement} from './element';
+import {makeCompactElement} from './compact-element';
 
 export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
   const Element = makeElement({adapt, clone, shift, diff});
+  const CompactElement = makeCompactElement(Element);
 
   class Container {
     constructor () {
@@ -50,17 +52,47 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
         cl.pin();
       }
 
-      if (this.isEmpty() || cl.isPinned()) {
+      if (this.isEmpty()) {
+        this[elements].push(cl);
+      } else if (cl.isPinned()) {
         this[elements].push(cl);
       } else {
-        cl.shiftTo(this._end);
-        this[elements].push(cl);
+        const elts = this[elements];
+        let i = 0;
+        for (let g of this.gaps()) {
+          if (g.size() >= cl.size()) {
+            cl.shiftTo(g._start);
+            elts[i] = new CompactElement(
+              ...elts[i].points(), cl._end);
+            ++i;
+            break;
+          }
+          ++i;
+        }
+
+        if (i === 0) {
+          const el = elts[0];
+          cl.shiftTo(el._end);
+          elts[0] = new CompactElement(...el.points(), cl._end);
+        }
       }
     }
 
     * [Symbol.iterator] () {
       for (let e of this[elements]) {
         yield* e;
+      }
+    }
+
+    * gaps () {
+      let e0;
+      for (let e of this[elements]) {
+        if (!e0) {
+          e0 = e;
+          continue;
+        }
+        yield new Element(e0._end, e._start);
+        e0 = e;
       }
     }
   }
