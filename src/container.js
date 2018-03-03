@@ -52,6 +52,10 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
         cl.pin();
       }
 
+      if (e.isConnex()) {
+        cl.connex();
+      }
+
       if (this.isEmpty()) {
         this[elements].push(cl);
       } else if (cl.isPinned()) {
@@ -68,6 +72,8 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
             cl = null;
             ++i;
             break;
+          } else if (cl.isConnex()) {
+
           } else {
             cl = new Element(g._end, cl._end);
             elts[i] = new CompactElement(...elts[i].points(), g._end);

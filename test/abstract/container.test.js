@@ -127,7 +127,7 @@ describe('A Container', function () {
       expect(+es2[3]._end).to.equal(+moment(27));
     });
 
-    describe('and when a filler Element is not large enough', function () {
+    describe('and when a gap is not large enough', function () {
       it('tries to split the new Element across multiple gaps', function () {
         const c = new Container();
         const e = new Element(2, 7);
@@ -184,14 +184,14 @@ describe('A Container', function () {
         expect(es2).to.have.length(4);
 
         expect(+es2[0]._start).to.eql(+moment(2));
-        expect(+es2[1]._start).to.eql(+moment(7));
-        expect(+es2[2]._start).to.eql(+moment(12));
-        expect(+es2[3]._start).to.eql(+moment(17));
+        expect(+es2[1]._start).to.eql(+moment(12));
+        expect(+es2[2]._start).to.eql(+moment(22));
+        expect(+es2[3]._start).to.eql(+moment(27));
 
         expect(+es2[0]._end).to.eql(+moment(7));
-        expect(+es2[1]._end).to.eql(+moment(12));
-        expect(+es2[2]._end).to.eql(+moment(17));
-        expect(+es2[3]._end).to.eql(+moment(33));
+        expect(+es2[1]._end).to.eql(+moment(17));
+        expect(+es2[2]._end).to.eql(+moment(27));
+        expect(+es2[3]._end).to.eql(+moment(43));
       });
 
       it('throws an error when two pinned Elements collide');
