@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 import {expect} from 'chai';
 import moment from 'moment';
 import {makeElement} from '../../src/element';
@@ -55,5 +56,78 @@ describe('A CompactElement, initialized with {clone: moment}', function () {
     const j = new CompactElement(now, now.clone().add(1, 'h'));
     expect(j.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(j._start).not.to.equal(now);
+  });
+});
+
+const funcs = [undefined, moment];
+
+funcs.forEach(adapt => {
+  funcs.forEach(clone => {
+    if (clone !== undefined || adapt !== undefined) {
+      describe(`Element initialized with ${adapt && 'adapt'}/${
+        clone && 'clone'}`, function () {
+        const Element = makeCompactElement(makeElement({adapt, clone,
+          shift: (mt, diff) => {
+            mt.add(diff);
+          },
+          diff: (mt1, mt2) => {
+            return mt2.diff(mt1);
+          },
+        }));
+
+        beforeEach(function () {
+          const today = moment().startOf('d');
+          const tomorrow = today.clone().add(1, 'd');
+          const yesterday = today.clone().add(-1, 'd');
+          const c = new Element(yesterday, today, tomorrow);
+
+          const d = c.clone();
+
+          const shiftTest = d => {
+            expect(c._start).to.eql(yesterday);
+            expect(c._end).to.eql(tomorrow);
+            expect(d._start).not.to.equal(c._end);
+            expect(d._start).to.eql(tomorrow);
+            expect(d._end).to.eql(tomorrow.clone().add(2, 'd'));
+          };
+
+          this.today = today;
+          this.tomorrow = tomorrow;
+          this.yesterday = yesterday;
+          this.c = c;
+          this.d = d;
+          this.shiftTest = shiftTest;
+        });
+
+        it('has a method clone', function () {
+          const {c, d} = this;
+
+          expect(d._start).not.to.equal(c._start);
+          expect(d._end).not.to.equal(c._end);
+          expect(d._start).to.eql(c._start);
+          expect(d._end).to.eql(c._end);
+        });
+
+        it('has a method shift', function () {
+          this.d.shift(moment.duration(2, 'd'));
+          this.shiftTest(this.d);
+        });
+
+        it('has a method shiftTo', function () {
+          this.d.shiftTo(this.tomorrow);
+          this.shiftTest(this.d);
+        });
+
+        it('has a method cloneAndShift', function () {
+          const d = this.c.cloneAndShift(moment.duration(2, 'd'));
+          this.shiftTest(d);
+        });
+
+        it('has a method cloneAndShiftTo', function () {
+          const d = this.c.cloneAndShiftTo(this.tomorrow);
+          this.shiftTest(d);
+        });
+      });
+    }
   });
 });
