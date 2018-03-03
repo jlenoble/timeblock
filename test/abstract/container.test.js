@@ -21,7 +21,15 @@ describe('A Container', function () {
     expect(new Container().size()).to.equal(0);
   });
 
-  it('has bounds - start and end methods');
+  it('has bounds', function () {
+    const c = new Container();
+    const e = new Element(2, 7);
+    expect(c._start).to.equal(0);
+    expect(c._end).to.equal(0);
+    c.add(e);
+    expect(c._start).to.eql(e._start);
+    expect(c._end).to.eql(e._end);
+  });
 
   describe('is resizable:', function () {
     it('Arbitrarily to the left');
