@@ -1,12 +1,13 @@
 import {expect} from 'chai';
 import moment from 'moment';
+import {makeElement} from '../../src/element';
 import {makeCompactElement} from '../../src/compact-element';
 
 describe('A CompactElement, initialized with no adaptors', function () {
-  const CompactElement = makeCompactElement();
+  const CompactElement = makeCompactElement(makeElement());
 
   it('has a size: size method', function () {
-    const e = new CompactElement(10, 100);
+    const e = new CompactElement(10, 25, 60, 100);
     expect(e.size()).to.equal(90);
 
     const now = moment();
@@ -15,15 +16,13 @@ describe('A CompactElement, initialized with no adaptors', function () {
     expect(f.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(f._start).to.equal(now);
   });
-
-  it('may have a value - pinning');
 });
 
 describe('A CompactElement, initialized with {adapt: moment}', function () {
-  const CompactElement = makeCompactElement({adapt: moment});
+  const CompactElement = makeCompactElement(makeElement({adapt: moment}));
 
   it('has a size: size method', function () {
-    const e = new CompactElement(10, 100);
+    const e = new CompactElement(10, 25, 60, 100);
     expect(e.size()).to.equal(90);
 
     const now = moment();
@@ -37,15 +36,13 @@ describe('A CompactElement, initialized with {adapt: moment}', function () {
     expect(h.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(h._start).not.to.equal(now);
   });
-
-  it('may have a value - pinning');
 });
 
 describe('A CompactElement, initialized with {clone: moment}', function () {
-  const CompactElement = makeCompactElement({clone: moment});
+  const CompactElement = makeCompactElement(makeElement({clone: moment}));
 
   it('has a size: size method', function () {
-    const e = new CompactElement(10, 100);
+    const e = new CompactElement(10, 25, 60, 100);
     expect(e.size()).to.equal(90);
 
     const now = moment();
@@ -59,6 +56,4 @@ describe('A CompactElement, initialized with {clone: moment}', function () {
     expect(j.size()).to.equal(moment.duration(1, 'h').asMilliseconds());
     expect(j._start).not.to.equal(now);
   });
-
-  it('may have a value - pinning');
 });

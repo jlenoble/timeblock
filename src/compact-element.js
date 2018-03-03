@@ -1,57 +1,11 @@
-import {elements, start, end} from './element';
+import {elements} from './element';
 
-export const makeCompactElement = ({adapt, clone} = {}) => {
-  const initProperties = adapt
-    ? args => ({
-      [elements]: {value: args.map(arg => adapt(arg))},
-      [start]: {value: adapt(args[0])},
-      [end]: {value: adapt(args[args.length - 1])},
-    })
-    : args => ({
-      [elements]: {value: args},
-      [start]: {value: args[0]},
-      [end]: {value: args[args.length - 1]},
-    });
+export const makeCompactElement = Element => {
+  const {adapt, clone, shift, diff} = Element.adaptors;
 
-  const defineProperties = clone
-    ? args => {
-      const properties = initProperties(args);
-      return Object.assign(properties, {
-        _start: {
-          get () {
-            return clone(this[start]);
-          },
-        },
-        _end: {
-          get () {
-            return clone(this[end]);
-          },
-        },
-      });
-    }
-    : args => {
-      const properties = initProperties(args);
-      return Object.assign(properties, {
-        _start: {
-          get () {
-            return this[start];
-          },
-        },
-        _end: {
-          get () {
-            return this[end];
-          },
-        },
-      });
-    };
-
-  return class CompactElement {
+  return class CompactElement extends Element {
     constructor (...args) {
-      Object.defineProperties(this, defineProperties(args));
-    }
-
-    size () {
-      return +this[end] - this[start];
+      super(args[0], args[args.length - 1]);
     }
   };
 };
