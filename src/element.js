@@ -80,7 +80,7 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     }, {});
   };
 
-  return class Element {
+  class Element {
     constructor (a, b) {
       Object.defineProperties(this, defineProperties(a, b));
     }
@@ -128,5 +128,9 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
       this[pin] = false;
       return this;
     }
-  };
+  }
+
+  Element.adaptors = {adapt, clone, shift, diff};
+
+  return Element;
 };
