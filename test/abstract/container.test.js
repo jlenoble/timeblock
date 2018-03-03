@@ -121,10 +121,3 @@ describe('A Container', function () {
   it('has a concatenation strategy');
   it('provides a generator to access its (wrapped/copied) Elements');
 });
-
-describe('A Wrapper', function () {
-  it('has bounds');
-  it('wraps a single element');
-  it('can share its element with other wrappers');
-  it('defines a span smaller or equal to its element size');
-});
