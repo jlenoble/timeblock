@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 import {expect} from 'chai';
 import moment from 'moment';
 import {makeElement} from '../../src/element';
@@ -71,12 +72,21 @@ funcs.forEach(adapt => {
           },
         });
 
-        it('has a method clone', function () {
+        beforeEach(function () {
           const today = moment().startOf('d');
           const tomorrow = today.clone().add(1, 'd');
           const c = new Element(today, tomorrow);
 
           const d = c.clone();
+
+          this.today = today;
+          this.tomorrow = tomorrow;
+          this.c = c;
+          this.d = d;
+        });
+
+        it('has a method clone', function () {
+          const {c, d} = this;
 
           expect(d._start).not.to.equal(c._start);
           expect(d._end).not.to.equal(c._end);
@@ -85,11 +95,7 @@ funcs.forEach(adapt => {
         });
 
         it('has a method shift', function () {
-          const today = moment().startOf('d');
-          const tomorrow = today.clone().add(1, 'd');
-          const c = new Element(today, tomorrow);
-
-          const d = c.clone();
+          const {today, tomorrow, c, d} = this;
           d.shift(moment.duration(1, 'd'));
 
           expect(c._start).to.eql(today);
@@ -100,11 +106,7 @@ funcs.forEach(adapt => {
         });
 
         it('has a method shiftTo', function () {
-          const today = moment().startOf('d');
-          const tomorrow = today.clone().add(1, 'd');
-          const c = new Element(today, tomorrow);
-
-          const d = c.clone();
+          const {today, tomorrow, c, d} = this;
           d.shiftTo(tomorrow);
 
           expect(c._start).to.eql(today);
@@ -115,10 +117,7 @@ funcs.forEach(adapt => {
         });
 
         it('has a method cloneAndShift', function () {
-          const today = moment().startOf('d');
-          const tomorrow = today.clone().add(1, 'd');
-          const c = new Element(today, tomorrow);
-
+          const {today, tomorrow, c} = this;
           const d = c.cloneAndShift(moment.duration(1, 'd'));
 
           expect(c._start).to.eql(today);
@@ -129,10 +128,7 @@ funcs.forEach(adapt => {
         });
 
         it('has a method cloneAndShiftTo', function () {
-          const today = moment().startOf('d');
-          const tomorrow = today.clone().add(1, 'd');
-          const c = new Element(today, tomorrow);
-
+          const {today, tomorrow, c} = this;
           const d = c.cloneAndShiftTo(tomorrow);
 
           expect(c._start).to.eql(today);
