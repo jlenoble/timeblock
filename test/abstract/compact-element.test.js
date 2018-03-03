@@ -64,7 +64,7 @@ const funcs = [undefined, moment];
 funcs.forEach(adapt => {
   funcs.forEach(clone => {
     if (clone !== undefined || adapt !== undefined) {
-      describe(`Element initialized with ${adapt && 'adapt'}/${
+      describe(`CompactElement initialized with ${adapt && 'adapt'}/${
         clone && 'clone'}`, function () {
         const Element = makeCompactElement(makeElement({adapt, clone,
           shift: (mt, diff) => {
