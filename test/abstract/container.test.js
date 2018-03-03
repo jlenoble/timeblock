@@ -31,10 +31,13 @@ describe('A Container', function () {
     expect(c._end).to.eql(e._end);
   });
 
-  describe('is resizable:', function () {
-    it('Arbitrarily to the left');
-    it('Arbitrarily to the right');
-    it('It may wrap around sized Elements - autoresize');
+  it('is resizable', function () {
+    const c = new Container();
+    const e = new Element(2, 7);
+    expect(c.size()).to.equal(0);
+    expect(e.size()).to.equal(5);
+    c.add(e);
+    expect(c.size()).to.equal(5);
   });
 
   it('has an occupationSize method', function () {
