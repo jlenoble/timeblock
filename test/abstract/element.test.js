@@ -79,10 +79,19 @@ funcs.forEach(adapt => {
 
           const d = c.clone();
 
+          const shiftTest = d => {
+            expect(c._start).to.eql(today);
+            expect(c._end).to.eql(tomorrow);
+            expect(d._start).not.to.equal(c._end);
+            expect(d._start).to.eql(tomorrow);
+            expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+          };
+
           this.today = today;
           this.tomorrow = tomorrow;
           this.c = c;
           this.d = d;
+          this.shiftTest = shiftTest;
         });
 
         it('has a method clone', function () {
@@ -95,47 +104,23 @@ funcs.forEach(adapt => {
         });
 
         it('has a method shift', function () {
-          const {today, tomorrow, c, d} = this;
-          d.shift(moment.duration(1, 'd'));
-
-          expect(c._start).to.eql(today);
-          expect(c._end).to.eql(tomorrow);
-          expect(d._start).not.to.equal(c._end);
-          expect(d._start).to.eql(tomorrow);
-          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+          this.d.shift(moment.duration(1, 'd'));
+          this.shiftTest(this.d);
         });
 
         it('has a method shiftTo', function () {
-          const {today, tomorrow, c, d} = this;
-          d.shiftTo(tomorrow);
-
-          expect(c._start).to.eql(today);
-          expect(c._end).to.eql(tomorrow);
-          expect(d._start).not.to.equal(c._end);
-          expect(d._start).to.eql(tomorrow);
-          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+          this.d.shiftTo(this.tomorrow);
+          this.shiftTest(this.d);
         });
 
         it('has a method cloneAndShift', function () {
-          const {today, tomorrow, c} = this;
-          const d = c.cloneAndShift(moment.duration(1, 'd'));
-
-          expect(c._start).to.eql(today);
-          expect(c._end).to.eql(tomorrow);
-          expect(d._start).not.to.equal(c._end);
-          expect(d._start).to.eql(tomorrow);
-          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+          const d = this.c.cloneAndShift(moment.duration(1, 'd'));
+          this.shiftTest(d);
         });
 
         it('has a method cloneAndShiftTo', function () {
-          const {today, tomorrow, c} = this;
-          const d = c.cloneAndShiftTo(tomorrow);
-
-          expect(c._start).to.eql(today);
-          expect(c._end).to.eql(tomorrow);
-          expect(d._start).not.to.equal(c._end);
-          expect(d._start).to.eql(tomorrow);
-          expect(d._end).to.eql(tomorrow.clone().add(1, 'd'));
+          const d = this.c.cloneAndShiftTo(this.tomorrow);
+          this.shiftTest(d);
         });
       });
     }
