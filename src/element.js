@@ -1,6 +1,7 @@
 export const elements = Symbol('elements');
 export const start = Symbol('start');
 export const end = Symbol('end');
+export const pin = Symbol('pin');
 
 export const makeElement = ({adapt, clone, shift, diff} = {}) => {
   const defineProperties1 = adapt
@@ -93,6 +94,10 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     }
 
     shift (diff) {
+      if (this.isPinned()) {
+        throw new Error(`This Element is pinned and won't move`);
+      }
+
       shift(this[start], diff);
       shift(this[end], diff);
       return this;
@@ -108,6 +113,20 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
 
     cloneAndShiftTo (value) {
       return this.clone().shiftTo(value);
+    }
+
+    isPinned () {
+      return this[pin];
+    }
+
+    pin () {
+      this[pin] = true;
+      return this;
+    }
+
+    unpin () {
+      this[pin] = false;
+      return this;
     }
   };
 };
