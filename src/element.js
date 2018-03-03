@@ -2,6 +2,7 @@ export const elements = Symbol('elements');
 export const start = Symbol('start');
 export const end = Symbol('end');
 export const pin = Symbol('pin');
+export const connex = Symbol('connex');
 
 export const makeElement = ({adapt, clone, shift, diff} = {}) => {
   const defineProperties = adapt
@@ -109,6 +110,20 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
 
     unpin () {
       this[pin] = false;
+      return this;
+    }
+
+    isConnex () {
+      return this[connex];
+    }
+
+    connex () {
+      this[connex] = true;
+      return this;
+    }
+
+    unconnex () {
+      this[connex] = false;
       return this;
     }
 

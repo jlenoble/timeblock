@@ -116,15 +116,15 @@ describe('A Container', function () {
 
       const es2 = Array.from(c);
 
-      expect(es2[0]._start.format()).to.eql(moment(2).format());
-      expect(es2[1]._start.format()).to.eql(moment(7).format());
-      expect(es2[2]._start.format()).to.eql(moment(12).format());
-      expect(es2[3]._start.format()).to.eql(moment(22).format());
+      expect(+es2[0]._start).to.equal(+moment(2));
+      expect(+es2[1]._start).to.equal(+moment(7));
+      expect(+es2[2]._start).to.equal(+moment(12));
+      expect(+es2[3]._start).to.equal(+moment(22));
 
-      expect(es2[0]._end.format()).to.eql(moment(7).format());
-      expect(es2[1]._end.format()).to.eql(moment(12).format());
-      expect(es2[2]._end.format()).to.eql(moment(17).format());
-      expect(es2[3]._end.format()).to.eql(moment(27).format());
+      expect(+es2[0]._end).to.equal(+moment(7));
+      expect(+es2[1]._end).to.equal(+moment(12));
+      expect(+es2[2]._end).to.equal(+moment(17));
+      expect(+es2[3]._end).to.equal(+moment(27));
     });
 
     describe('and when a filler Element is not large enough', function () {
@@ -148,22 +148,52 @@ describe('A Container', function () {
 
         expect(es2).to.have.length(6);
 
-        expect(es2[0]._start.format()).to.eql(moment(2).format());
-        expect(es2[1]._start.format()).to.eql(moment(7).format());
-        expect(es2[2]._start.format()).to.eql(moment(12).format());
-        expect(es2[3]._start.format()).to.eql(moment(15).format());
-        expect(es2[4]._start.format()).to.eql(moment(20).format());
-        expect(es2[5]._start.format()).to.eql(moment(25).format());
+        expect(+es2[0]._start).to.eql(+moment(2));
+        expect(+es2[1]._start).to.eql(+moment(7));
+        expect(+es2[2]._start).to.eql(+moment(12));
+        expect(+es2[3]._start).to.eql(+moment(17));
+        expect(+es2[4]._start).to.eql(+moment(22));
+        expect(+es2[5]._start).to.eql(+moment(27));
 
-        expect(es2[0]._end.format()).to.eql(moment(7).format());
-        expect(es2[1]._end.format()).to.eql(moment(12).format());
-        expect(es2[2]._end.format()).to.eql(moment(17).format());
-        expect(es2[3]._end.format()).to.eql(moment(22).format());
-        expect(es2[4]._end.format()).to.eql(moment(25).format());
-        expect(es2[5]._end.format()).to.eql(moment(39).format());
+        expect(+es2[0]._end).to.eql(+moment(7));
+        expect(+es2[1]._end).to.eql(+moment(12));
+        expect(+es2[2]._end).to.eql(+moment(17));
+        expect(+es2[3]._end).to.eql(+moment(22));
+        expect(+es2[4]._end).to.eql(+moment(27));
+        expect(+es2[5]._end).to.eql(+moment(33));
       });
 
-      it('moves unpinned unsplittable new Elements to the first large enough gap');
+      it('moves unpinned unsplittable new Elements to the first large enough gap', function () {
+        const c = new Container();
+        const e = new Element(2, 7);
+        const f = new Element(8, 24);
+
+        const es = [
+          e,
+          e.cloneAndShift(10).pin(),
+          e.cloneAndShift(20).pin(),
+          f.connex(),
+        ];
+
+        es.forEach(e => {
+          c.add(e);
+        });
+
+        const es2 = Array.from(c);
+
+        expect(es2).to.have.length(4);
+
+        expect(+es2[0]._start).to.eql(+moment(2));
+        expect(+es2[1]._start).to.eql(+moment(7));
+        expect(+es2[2]._start).to.eql(+moment(12));
+        expect(+es2[3]._start).to.eql(+moment(17));
+
+        expect(+es2[0]._end).to.eql(+moment(7));
+        expect(+es2[1]._end).to.eql(+moment(12));
+        expect(+es2[2]._end).to.eql(+moment(17));
+        expect(+es2[3]._end).to.eql(+moment(33));
+      });
+
       it('throws an error when two pinned Elements collide');
     });
   });
