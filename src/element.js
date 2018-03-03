@@ -115,6 +115,11 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
     * [Symbol.iterator] () {
       yield this.clone();
     }
+
+    * points () {
+      yield this._start;
+      yield this._end;
+    }
   }
 
   Element.adaptors = {adapt, clone, shift, diff};

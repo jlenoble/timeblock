@@ -78,6 +78,10 @@ export const makeCompactElement = Element => {
         yield new Element(a, b);
       }
     }
+
+    * points () {
+      yield* this._elements;
+    }
   }
 
   CompactElement.adaptors = Element.adaptors;
