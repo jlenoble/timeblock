@@ -66,6 +66,18 @@ export const makeCompactElement = Element => {
       this[elements].forEach(el => shift(el, diff));
       return this;
     }
+
+    * [Symbol.iterator] () {
+      let a;
+      for (let b of this._elements) {
+        if (!a) {
+          a = b;
+          continue;
+        }
+
+        yield new Element(a, b);
+      }
+    }
   }
 
   CompactElement.adaptors = Element.adaptors;

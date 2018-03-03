@@ -111,6 +111,10 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
       this[pin] = false;
       return this;
     }
+
+    * [Symbol.iterator] () {
+      yield this.clone();
+    }
   }
 
   Element.adaptors = {adapt, clone, shift, diff};

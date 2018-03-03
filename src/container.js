@@ -57,6 +57,12 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
         this[elements].push(cl);
       }
     }
+
+    * [Symbol.iterator] () {
+      for (let e of this[elements]) {
+        yield* e;
+      }
+    }
   }
 
   return {Container, Element};
