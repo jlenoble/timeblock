@@ -46,7 +46,7 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
     }
 
     add (e) {
-      const cl = e.clone();
+      let cl = e.clone();
 
       if (e.isPinned()) {
         cl.pin();
@@ -59,14 +59,20 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
       } else {
         const elts = this[elements];
         let i = 0;
+
         for (let g of this.gaps()) {
+          cl.shiftTo(g._start);
+
           if (g.size() >= cl.size()) {
-            cl.shiftTo(g._start);
-            elts[i] = new CompactElement(
-              ...elts[i].points(), cl._end);
+            elts[i] = new CompactElement(...elts[i].points(), cl._end);
+            cl = null;
             ++i;
             break;
+          } else {
+            cl = new Element(g._end, cl._end);
+            elts[i] = new CompactElement(...elts[i].points(), g._end);
           }
+
           ++i;
         }
 
@@ -74,6 +80,10 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
           const el = elts[0];
           cl.shiftTo(el._end);
           elts[0] = new CompactElement(...el.points(), cl._end);
+        } else if (cl) {
+          const el = elts[elts.length - 1];
+          cl.shiftTo(el._end);
+          elts[elts.length - 1] = new CompactElement(...el.points(), cl._end);
         }
       }
     }
