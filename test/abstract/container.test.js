@@ -72,7 +72,19 @@ describe('A Container', function () {
       expect(c.freeSize()).to.equal(0);
     });
 
-    it('introduces filler Elements between pinned non-adjacent Elements');
+    it('leaves untouched pinned non-adjacent Elements', function () {
+      const c = new Container();
+      const e = new Element(2, 7);
+
+      c.add(e.pin());
+      c.add(e.cloneAndShift(10).pin());
+      c.add(e.cloneAndShift(20).pin());
+      c.add(e.cloneAndShift(30).pin());
+
+      expect(c.size()).to.equal(35);
+      expect(c.occupationSize()).to.equal(20);
+      expect(c.freeSize()).to.equal(15);
+    });
   });
 
   it('has resizable unpinned filler Elements');

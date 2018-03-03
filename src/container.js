@@ -44,10 +44,17 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
     }
 
     add (e) {
-      if (this.isEmpty()) {
-        this[elements].push(e.clone());
+      const cl = e.clone();
+
+      if (e.isPinned()) {
+        cl.pin();
+      }
+
+      if (this.isEmpty() || cl.isPinned()) {
+        this[elements].push(cl);
       } else {
-        this[elements].push(e.cloneAndShiftTo(this._end));
+        cl.shiftTo(this._end);
+        this[elements].push(cl);
       }
     }
   }
