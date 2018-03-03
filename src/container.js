@@ -87,11 +87,9 @@ export const makeContainer = ({adapt, clone, shift, diff} = {}) => {
     * gaps () {
       let e0;
       for (let e of this[elements]) {
-        if (!e0) {
-          e0 = e;
-          continue;
+        if (e0) {
+          yield new Element(e0._end, e._start);
         }
-        yield new Element(e0._end, e._start);
         e0 = e;
       }
     }
