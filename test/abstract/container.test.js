@@ -1,9 +1,16 @@
 /* eslint-disable max-len */
 import {expect} from 'chai';
-import Container from '../../src/container';
-import {makeElement} from '../../src/element';
+import moment from 'moment';
+import {makeContainer} from '../../src/container';
 
-const Element = makeElement();
+const {Container, Element} = makeContainer({
+  adapt: moment,
+  clone: moment,
+  shift: (mt, diff) => {
+    mt.add(diff);
+  },
+  diff: (mt1, mt2) => mt2.diff(mt1),
+});
 
 describe('A Container', function () {
   it('starts empty - isEmpty method', function () {
@@ -51,7 +58,20 @@ describe('A Container', function () {
   it('has a has method');
 
   describe('when fitting new Elements', function () {
-    it('compacts unpinned Elements to the left');
+    it('compacts unpinned Elements to the left', function () {
+      const c = new Container();
+      const e = new Element(2, 7);
+
+      c.add(e);
+      c.add(e);
+      c.add(e);
+      c.add(e);
+
+      expect(c.size()).to.equal(20);
+      expect(c.occupationSize()).to.equal(20);
+      expect(c.freeSize()).to.equal(0);
+    });
+
     it('introduces filler Elements between pinned non-adjacent Elements');
   });
 
