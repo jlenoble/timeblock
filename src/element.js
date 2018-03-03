@@ -4,7 +4,7 @@ export const end = Symbol('end');
 export const pin = Symbol('pin');
 
 export const makeElement = ({adapt, clone, shift, diff} = {}) => {
-  const defineProperties1 = adapt
+  const defineProperties = adapt
     ? (a, b) => ({
       [start]: {value: adapt(a)},
       [end]: {value: adapt(b)},
@@ -14,8 +14,8 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
       [end]: {value: b},
     });
 
-  const defineProperties2 = clone
-    ? () => ({
+  const properties = clone
+    ? {
       _start: {
         get () {
           return clone(this[start]);
@@ -26,8 +26,8 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
           return clone(this[end]);
         },
       },
-    })
-    : () => ({
+    }
+    : {
       _start: {
         get () {
           return this[start];
@@ -38,56 +38,34 @@ export const makeElement = ({adapt, clone, shift, diff} = {}) => {
           return this[end];
         },
       },
-    });
+    };
 
-  const defineProperties3 = clone || adapt
-    ? () => ({})
-    : () => ({
-      clone: {
-        value: function () {
-          throw new TypeError(
-            `This Element object can't be cloned safely (no clone/adapt)`);
-        },
-      },
-    });
-
-  const defineProperties4 = shift
-    ? () => ({})
-    : () => ({
-      shift: {
-        value: function () {
-          throw new TypeError(
-            `This Element object can't be shifted (no shift)`);
-        },
-      },
-    });
-
-  const defineProperties5 = diff
-    ? () => ({})
-    : () => ({
-      shiftTo: {
-        value: function () {
-          throw new TypeError(
-            `This Element object can't be shifted (no diff)`);
-        },
-      },
-    });
-
-  const defineProperties = (a, b) => {
-    return [defineProperties2, defineProperties3, defineProperties4,
-      defineProperties5].reduce((props, fn) => {
-      return Object.assign(props, fn(a, b));
-    }, {});
+  const errors = {
+    'cloned safely (no clone/adapt)': !clone && !adapt,
+    'shifted (no shift)': !shift,
+    'shifted (no diff)': !diff,
   };
+
+  Object.keys(errors).forEach(key => {
+    if (errors[key]) {
+      Object.assign(properties, {
+        [key.match(/^.*\Wno (\w+)\W.*$/)[1]]: {
+          value: () => {
+            throw new Error(`This Element instance can't be ${key}`);
+          },
+        },
+      });
+    }
+  });
 
   class Element {
     constructor (a, b, ...args) {
-      Object.defineProperties(this, defineProperties(a, b));
+      Object.defineProperties(this, properties);
       this.initialize(a, b, ...args);
     }
 
     initialize (a, b) {
-      Object.defineProperties(this, defineProperties1(a, b));
+      Object.defineProperties(this, defineProperties(a, b));
     }
 
     size () {

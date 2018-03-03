@@ -1,9 +1,9 @@
 import {elements, start, end} from './element';
 
 export const makeCompactElement = Element => {
-  const {adapt, clone, shift, diff} = Element.adaptors;
+  const {adapt, clone, shift} = Element.adaptors;
 
-  const defineProperties1 = adapt
+  const defineProperties = adapt
     ? args => ({
       [elements]: {
         value: args.map(arg => adapt(arg)),
@@ -15,35 +15,30 @@ export const makeCompactElement = Element => {
       },
     });
 
-  const defineProperties2 = clone
-    ? () => ({
+  const properties = clone
+    ? {
       _elements: {
         get () {
           return this[elements].map(arg => clone(arg));
         },
       },
-    })
-    : () => ({
+    }
+    : {
       _elements: {
         get () {
           return this[elements].concat();
         },
       },
-    });
-
-  const defineProperties = args => {
-    return [defineProperties1, defineProperties2].reduce((props, fn) => {
-      return Object.assign(props, fn(args));
-    }, {});
-  };
+    };
 
   class CompactElement extends Element {
     constructor (...args) {
       super(...args);
-      Object.defineProperties(this, defineProperties(args));
+      Object.defineProperties(this, Object.assign(properties,
+        defineProperties(args)));
     }
 
-    initialize (...args) {
+    initialize (...args) { // Called virtually
       Object.defineProperties(this, {
         [start]: {
           get () {
